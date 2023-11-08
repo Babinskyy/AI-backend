@@ -29,7 +29,7 @@ export const generateChatCompletion = async (
     const openai = new OpenAIApi(config);
     const chatResponse = await openai.createChatCompletion(
       {
-        model: "gpt-3.5-turbo",
+        model: "gpt-4",
         messages: chats,
         stream: true,
       },
@@ -38,19 +38,30 @@ export const generateChatCompletion = async (
 
     const stream = chatResponse.data as unknown as IncomingMessage;
 
+    let buffer = "";
     stream.on("data", (chunk: Buffer) => {
-      const payloads = chunk.toString().split("\n\n");
-      for (const payload of payloads) {
-        if (payload.includes("[DONE]")) return;
-        if (payload.startsWith("data:")) {
-          const data = JSON.parse(payload.replace("data: ", ""));
-          try {
-            const chunk: undefined | string = data.choices[0].delta?.content;
-            if (chunk) {
-              console.log(chunk);
+      // Append the chunk to the buffer
+      buffer += chunk.toString();
+
+      // Attempt to find complete JSON objects
+      let boundary = buffer.lastIndexOf("\n\n"); // Using '\n\n' as the boundary
+      if (boundary !== -1) {
+        let completeData = buffer.substring(0, boundary); // Get complete data
+        buffer = buffer.substring(boundary + 2); // Reset buffer to the remaining part
+
+        const payloads = completeData.split("\n\n").filter((payload) => payload.trim());
+        for (const payload of payloads) {
+          if (payload.includes("[DONE]")) return;
+          if (payload.startsWith("data:")) {
+            const data = JSON.parse(payload.replace("data: ", ""));
+            try {
+              const chunk: undefined | string = data.choices[0].delta?.content;
+              if (chunk) {
+                console.log(chunk);
+              }
+            } catch (error) {
+              console.log(`Error with JSON.parse and ${payload}.\n${error}`);
             }
-          } catch (error) {
-            console.log(`Error with JSON.parse and ${payload}.\n${error}`);
           }
         }
       }
