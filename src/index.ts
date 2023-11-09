@@ -20,7 +20,7 @@ io.on("connection", (socket) => {
 });
 
 app.get("/", (_req: Request, res: Response) => {
-  res.send("Welcome to Express & TypeScript TypeORM Server");
+  res.send("Welcome to AI Assistant API");
 });
 
 connectToDatabase()
