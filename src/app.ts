@@ -16,11 +16,12 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use((_req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:5174");
   res.setHeader("Access-Control-Allow-Credentials", "true");
+  res.setHeader(
+    "Set-Cookie",
+    `yourCookieName=yourCookieValue; Domain=.azurewebsites.net; Path=/; HttpOnly; SameSite=None; Secure`
+  );
   next();
 });
-
-//remove it in production
-app.use(morgan("dev"));
 
 app.use("/api/v1", appRouter);
 
