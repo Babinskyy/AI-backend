@@ -29,7 +29,7 @@ export const userSignup = async (req: Request, res: Response, next: NextFunction
 
     res.clearCookie(COOKIE_NAME, {
       path: "/",
-      domain: "localhost",
+      domain: "https://iassistantapi.azurewebsites.net",
       httpOnly: true,
       signed: true,
     });
@@ -39,7 +39,7 @@ export const userSignup = async (req: Request, res: Response, next: NextFunction
     expires.setDate(expires.getDate() + 7);
     res.cookie(COOKIE_NAME, token, {
       path: "/",
-      domain: "localhost",
+      domain: "https://aiassistantapi.azurewebsites.net",
       expires,
       httpOnly: true,
       signed: true,
@@ -72,7 +72,7 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
 
     res.clearCookie(COOKIE_NAME, {
       path: "/",
-      domain: "localhost",
+      domain: "https://aiassistantapi.azurewebsites.net",
       httpOnly: true,
       signed: true,
     });
@@ -82,7 +82,7 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
     expires.setDate(expires.getDate() + 7);
     res.cookie(COOKIE_NAME, token, {
       path: "/",
-      domain: "localhost",
+      domain: "https://aiassistantapi.azurewebsites.net",
       expires,
       httpOnly: true,
       signed: true,
@@ -127,7 +127,7 @@ export const userLogout = async (req: Request, res: Response, next: NextFunction
 
     res.clearCookie(COOKIE_NAME, {
       path: "/",
-      domain: "localhost",
+      domain: "https://aiassistantapi.azurewebsites.net/",
       httpOnly: true,
       signed: true,
     });
