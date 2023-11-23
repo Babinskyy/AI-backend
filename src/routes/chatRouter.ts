@@ -15,7 +15,12 @@ chatRouter.post(
   generateChatCompletion
 );
 
-chatRouter.get("/all-chats", verifyToken, sendChatsToUser);
+const checkFunc = (_req, _res, next) => {
+  console.log("HERE");
+  next();
+};
+
+chatRouter.get("/all-chats", checkFunc, verifyToken, sendChatsToUser);
 chatRouter.delete("/delete", verifyToken, deleteChats);
 
 export default chatRouter;

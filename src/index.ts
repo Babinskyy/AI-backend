@@ -16,7 +16,7 @@ export const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log(`Client connected with id: ${socket.id}`);
+  console.log(`Client is connected with id: ${socket.id}`);
 });
 
 app.get("/", (_req: Request, res: Response) => {

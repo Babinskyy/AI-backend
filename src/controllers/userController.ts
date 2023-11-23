@@ -27,27 +27,17 @@ export const userSignup = async (req: Request, res: Response, next: NextFunction
     const user = new User({ name, email, password: hashedPassword });
     await user.save();
 
-    res.clearCookie(COOKIE_NAME, {
-      path: "/",
-      domain: "localhost",
-      httpOnly: true,
-      signed: true,
-    });
-
     const token = createToken(user._id.toString(), user.email, "7d");
     const expires = new Date();
     expires.setDate(expires.getDate() + 7);
-    res.cookie(COOKIE_NAME, token, {
-      path: "/",
-      domain: "localhost",
-      expires,
-      httpOnly: true,
-      signed: true,
-    });
-
     return res
       .status(201)
-      .json({ message: "User created", name: user.name, email: user.email });
+      .json({
+        message: "User created",
+        name: user.name,
+        email: user.email,
+        token: token,
+      });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Error", cause: error.message });
@@ -70,23 +60,7 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
       return res.status(403).send("Incorrect Password");
     }
 
-    res.clearCookie(COOKIE_NAME, {
-      path: "/",
-      domain: "localhost",
-      httpOnly: true,
-      signed: true,
-    });
-
     const token = createToken(user._id.toString(), user.email, "7d");
-    const expires = new Date();
-    expires.setDate(expires.getDate() + 7);
-    res.cookie(COOKIE_NAME, token, {
-      path: "/",
-      domain: "localhost",
-      expires,
-      httpOnly: true,
-      signed: true,
-    });
 
     return res.status(200).json({
       message: "Login success",
@@ -128,12 +102,6 @@ export const userLogout = async (req: Request, res: Response, next: NextFunction
       return res.status(401).send("Permission did not match.");
     }
 
-    res.clearCookie(COOKIE_NAME, {
-      path: "/",
-      domain: "localhost",
-      httpOnly: true,
-      signed: true,
-    });
     return res
       .status(200)
       .json({ message: "Login success", name: user.name, email: user.email });
