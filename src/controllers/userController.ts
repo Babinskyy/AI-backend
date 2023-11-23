@@ -29,7 +29,7 @@ export const userSignup = async (req: Request, res: Response, next: NextFunction
 
     res.clearCookie(COOKIE_NAME, {
       path: "/",
-      domain: ".azurewebsites.net",
+      domain: "localhost",
       httpOnly: true,
       signed: true,
     });
@@ -39,7 +39,7 @@ export const userSignup = async (req: Request, res: Response, next: NextFunction
     expires.setDate(expires.getDate() + 7);
     res.cookie(COOKIE_NAME, token, {
       path: "/",
-      domain: ".azurewebsites.net",
+      domain: "localhost",
       expires,
       httpOnly: true,
       signed: true,
@@ -72,7 +72,7 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
 
     res.clearCookie(COOKIE_NAME, {
       path: "/",
-      domain: ".azurewebsites.net",
+      domain: "localhost",
       httpOnly: true,
       signed: true,
     });
@@ -82,15 +82,18 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
     expires.setDate(expires.getDate() + 7);
     res.cookie(COOKIE_NAME, token, {
       path: "/",
-      domain: ".azurewebsites.net",
+      domain: "localhost",
       expires,
       httpOnly: true,
       signed: true,
     });
 
-    return res
-      .status(200)
-      .json({ message: "Login success", name: user.name, email: user.email });
+    return res.status(200).json({
+      message: "Login success",
+      name: user.name,
+      email: user.email,
+      token: token,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Error", cause: error.message });
@@ -127,7 +130,7 @@ export const userLogout = async (req: Request, res: Response, next: NextFunction
 
     res.clearCookie(COOKIE_NAME, {
       path: "/",
-      domain: ".azurewebsites.net",
+      domain: "localhost",
       httpOnly: true,
       signed: true,
     });

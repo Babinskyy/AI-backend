@@ -63,7 +63,6 @@ export const generateChatCompletion = async (
             try {
               const chunk: undefined | string = data.choices[0].delta?.content;
               if (chunk) {
-                console.log(chunk);
                 chatAnswer.content += chunk;
                 io.emit("chunks", { content: chunk });
               }
@@ -76,8 +75,6 @@ export const generateChatCompletion = async (
     });
 
     stream.on("end", async () => {
-      console.log("stop emmiting");
-
       io.emit("streamEnd", { content: chatAnswer });
       user.chats.push(chatAnswer);
       await user.save();
